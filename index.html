@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Barlas Tracker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #333; }
+        .center { text-align: center; margin-top: 15vh; }
+        .badge { background: #059669; color: #fff; padding: 0.5em 1em; border-radius: 1em; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <h1>Barlas Tracker</h1>
+        <p class="badge">Firebase Connected!</p>
+        <div id="firebase-status"></div>
+    </div>
+    <script type="module">
+        // JOUW FIREBASE CONFIGURATIE
+        const firebaseConfig = {
+          apiKey: "AIzaSyCEajqP7g_hPhds3W1UgNgYnzJlmWKiQ7Q",
+          authDomain: "barlasikooo.firebaseapp.com",
+          projectId: "barlasikooo",
+          storageBucket: "barlasikooo.appspot.com",
+          messagingSenderId: "223354241466",
+          appId: "1:223354241466:web:8236cc34b95c4ef4839d83",
+          measurementId: "G-X5HTHST1GQ"
+        };
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // Probeer anoniem in te loggen en zet status
+        signInAnonymously(auth)
+            .then(() => {
+                document.getElementById('firebase-status').textContent = '✅ Verbonden met Firebase (Anoniem ingelogd)';
+                // Test Firestore: schrijf een testdocument
+                const db = getFirestore(app);
+                setDoc(doc(db, "test", "githubpages"), { status: "ok", date: new Date().toISOString() });
+            })
+            .catch((error) => {
+                document.getElementById('firebase-status').textContent = '❌ Fout bij verbinden met Firebase: ' + error.message;
+            });
+    </script>
+</body>
+</html>
